@@ -1,0 +1,6 @@
+# system & IDE
+.DS_STORE
+.vscode/
+
+# config
+.env

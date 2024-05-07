@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option go_package = "./proto";
+
+service CustomerService {
+    rpc CreateCustomer(CustomerCreateRequest) returns (CustomerCreateResponse);
+    rpc ExchangeTagForId(ExchangeTagForIdRequest) returns (ExchangeTagForIdResponse);
+    rpc ValidateId(ValidateIdRequest) returns (ValidateIdResponse);
+}
+
+message CustomerCreateRequest {
+    string name = 1;
+    string tag = 2;
+}
+
+message CustomerCreateResponse {
+    string id = 1;
+    string name = 2;
+    string tag = 3;
+}
+
+message ExchangeTagForIdRequest {
+    string tag = 1;
+}
+
+message ExchangeTagForIdResponse {
+    string id = 1;
+}
+
+message ValidateIdRequest {
+    string id = 1;
+}
+
+message ValidateIdResponse {
+    bool ok = 1;
+}
