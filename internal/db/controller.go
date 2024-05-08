@@ -1,25 +1,15 @@
 package db
 
 import (
-	"fmt"
-
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-type DatabaseConfig struct {
-	Host     string
-	User     string
-	Name     string
-	Password string
-	Port     string
-}
-
-func InitializeDbConnection(conf DatabaseConfig, logger *zap.Logger) *gorm.DB {
-	connectionString := fmt.Sprintf("host=%s user=%s dbname=%s password=%s port=%s", conf.Host, conf.User, conf.Name, conf.Password, conf.Port)
+func InitializeDbConnection(connectionString string, logger *zap.Logger) *gorm.DB {
 	db, err := gorm.Open(
 		postgres.Open(connectionString),
+		&gorm.Config{},
 	)
 	if err != nil {
 		logger.Fatal("Could not initialize database",

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 
@@ -30,14 +31,23 @@ func main() {
 
 	logger := zap.Must(zap.NewProduction())
 	defer logger.Sync()
-	conf := &db.DatabaseConfig{
-		User:     viper.GetString(confOptDatabaseUsername),
-		Password: viper.GetString(confOptDatabasePassword),
-		Host:     viper.GetString(confOptDatabaseHost),
-		Port:     viper.GetString(confOptDatabasePort),
-		Name:     viper.GetString(confOptDatabaseName),
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		logger.Fatal("error occured when loading config",
+			zap.Error(err),
+		)
+		return
 	}
-	database := db.InitializeDbConnection(*conf, logger)
+
+	connStr := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=require",
+		viper.GetString(confOptDatabaseUsername),
+		viper.GetString(confOptDatabasePassword),
+		viper.GetString(confOptDatabaseHost),
+		viper.GetString(confOptDatabasePort),
+		viper.GetString(confOptDatabaseName),
+	)
+	database := db.InitializeDbConnection(connStr, logger)
 
 	lis, err := net.Listen("tcp", viper.GetString(confOptBindPort))
 	if err != nil {
